@@ -28,22 +28,22 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-  app.get( "/filteredimage", async ( req, res ) => {
-    const {image_url} = req.query
+  app.get( "/filteredimage", async ( request, response ) => {
+    const {image_url} = request.query
     if(!image_url){
-      return res.status(400).send({
+      return response.status(400).send({
         message: 'Missing image_url parameter, image url is required'
      });
      ;
     }
     try {
       const image = await filterImageFromURL(image_url);
-      res.status(200).sendFile(image, (err) => {
+      response.status(200).sendFile(image, (err) => {
         deleteLocalFiles([image]);
       });
     } catch (error) {
       console.error(error);
-      res.send("Unprocessed Entity: Provide valid image url").status(500)
+      response.send("Unprocessed Entity: Provide valid image url").status(500)
     }
    
   } );
